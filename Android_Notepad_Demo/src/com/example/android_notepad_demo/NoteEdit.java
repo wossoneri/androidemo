@@ -3,6 +3,7 @@ package com.example.android_notepad_demo;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -81,6 +82,7 @@ public class NoteEdit extends Activity {
 	}
 
 	private void populateFields() {
+		Log.v("apidemo", "popopopoopopopopopopopopopopopopop");
 		if (mRowId != null) {
 			Cursor note = mDbHelper.fetchNote(mRowId);
 			startManagingCursor(note);
@@ -90,24 +92,24 @@ public class NoteEdit extends Activity {
 		}
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		saveState();
-		outState.putSerializable(NotesDbAdapter.KEY_ROWID, mRowId);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		saveState();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		populateFields();
-	}
+//	@Override
+//	protected void onSaveInstanceState(Bundle outState) {
+//		super.onSaveInstanceState(outState);
+//		saveState();
+//		outState.putSerializable(NotesDbAdapter.KEY_ROWID, mRowId);
+//	}
+//
+//	@Override
+//	protected void onPause() {
+//		super.onPause();
+//		saveState();
+//	}
+//
+//	@Override
+//	protected void onResume() {
+//		super.onResume();
+//		populateFields();
+//	}
 
 	private void saveState() {
 		String title = mTitleText.getText().toString();
