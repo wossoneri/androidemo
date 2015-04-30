@@ -8,25 +8,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-// 
 /**
  * Simple notes database access helper class. Defines the basic CRUD operations
  * for the notepad example, and gives the ability to list all notes as well as
  * retrieve or modify a specific note.
+ * 简单的记事本数据库访问帮助类。定义基本增删改查操作，并可以列出所有笔记条目或指定条目
  * 
- * This has been improved from the first version of this tutorial through the
- * addition of better error handling and also using returning a Cursor instead
- * of using a collection of inner classes (which is less scalable and not
- * recommended).
  */
 public class NotesDbAdapter {
 
+	// 表的3个字段
 	public static final String KEY_TITLE = "title";
 	public static final String KEY_BODY = "body";
 	public static final String KEY_ROWID = "_id";
 
-	private static final String DATABASE_CREATE = "create table notes (_id integer primary key autoincrement,"
-			+ "title text not null, body text not null);";
+	// 建表的sql语句
+	private static final String DATABASE_CREATE = "create table notes (_id integer primary key autoincrement, title text not null, body text not null);";
 
 	private static final String TAG = "NotesDbAdapter";
 	private static final String DATABASE_NAME = "data"; // 数据库名
@@ -45,13 +42,13 @@ public class NotesDbAdapter {
 		}
 
 		@Override
-		public void onCreate(SQLiteDatabase db) {
+		public void onCreate(SQLiteDatabase db) { // 在数据库第一次建立的时候调用
 			// TODO Auto-generated method stub
 			db.execSQL(DATABASE_CREATE);
 		}
 
 		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { // 更新，需要做删除表再新建表，也可以加其他操作
 			// TODO Auto-generated method stub
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion
 					+ ", which will destory all old data");
@@ -62,8 +59,8 @@ public class NotesDbAdapter {
 	}
 
 	/**
-	 * Constructor - takes the context to allow the database to be
-	 * opened/created
+	 * Constructor takes the context to allow the database to be opened/created
+	 * 构造获取上下文
 	 */
 	public NotesDbAdapter(Context mContext) {
 		this.mContext = mContext;
@@ -72,7 +69,7 @@ public class NotesDbAdapter {
 	/**
 	 * Open the notes database. If it cannot be opened, try to create a new
 	 * instance of the database. If it cannot be created, throw an exception to
-	 * signal the failure
+	 * signal the failure 打开notes数据库，如果不能打开，试着建立新数据库实例，如果不能建立，抛出异常
 	 * 
 	 * @return this (self reference, allowing this to be chained in an
 	 *         initialization call)
@@ -85,27 +82,33 @@ public class NotesDbAdapter {
 		// Create and/or open a database that will be used for reading and
 		// writing. The first time this is called, the database will be opened
 		// and onCreate, onUpgrade and/or onOpen will be called.
+		// 新建/打开一个用来读写的数据库。第一次调用，数据库会被打开，onCreate,onUpgrade和/或onOpen方法会被调用
 		// Once opened successfully, the database is cached, so you can call
 		// this method every time you need to write to the database. (Make sure
 		// to call close when you no longer need the database.) Errors such as
 		// bad permissions or a full disk may cause this method to fail, but
 		// future attempts may succeed if the problem is fixed.
+		// 一旦成功打开，数据库就会进入缓存，你就可以在任何要写入数据的时候调用这个方法（要保证在不需要数据库的时候关闭它）
+		// 像一些权限出错或者磁盘空间不足会导致方法调用失败，但修复这些问题后就能正常调用
 		// Database upgrade may take a long time, you should not call this
 		// method from the application main thread, including from
 		// ContentProvider.onCreate().
+		// 数据库更新可能会花费很长时间，所以不应该在应用的主线程调用它，包括从ContentProvider.onCreate().调用
 
 		return this;
 
 	}
 
 	public void close() {
-		mDbHelper.close();
+		mDbHelper.close(); // 关闭打开的数据库，释放连接的相关资源
 	}
 
 	/**
 	 * Create a new note using the title and body provided. If the note is
 	 * successfully created return the new rowId for that note, otherwise return
 	 * a -1 to indicate failure.
+	 * 
+	 * 用传递进来的内容新建一个条目。创建成功返回这个条目的id，失败返回-1
 	 * 
 	 * @param title
 	 *            the title of the note
@@ -114,11 +117,9 @@ public class NotesDbAdapter {
 	 * @return rowId or -1 if failed
 	 */
 	public long createNotes(String title, String body) {
-		ContentValues initialValues = new ContentValues();// This class is used
-															// to store a set of
-															// values that the
-															// ContentResolver
-															// can process.
+		ContentValues initialValues = new ContentValues();
+		// This class is used to store a set of values that the ContentResolver
+		// can process.
 		initialValues.put(KEY_TITLE, title);
 		initialValues.put(KEY_BODY, body);
 
@@ -146,9 +147,11 @@ public class NotesDbAdapter {
 	 * @return Cursor over all notes
 	 */
 	public Cursor fetchAllNotes() {
-		return mDb.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_TITLE, KEY_BODY }, null,
-				null, null, null, null);
-
+		return mDb.query(DATABASE_TABLE, // 要查询的表
+				new String[] { KEY_ROWID, KEY_TITLE, KEY_BODY },// 需要返回的列
+				null, null, null, null, null);// 全null表示要返回所有数据
+		// 返回一个指针而不是数据集。这使得android更有效的使用资源，而不是直接把大量数据放在内存中让指针读取/释放数据。
+		// 对于有很多行数据的表来说这样能明显提升效率
 	}
 
 	/**
@@ -161,8 +164,10 @@ public class NotesDbAdapter {
 	 *             if note could not be found/retrieved
 	 */
 	public Cursor fetchNote(long rowId) throws SQLException {
-		Cursor mCursor = mDb.query(true, DATABASE_TABLE, new String[] { KEY_ROWID, KEY_TITLE,
-				KEY_BODY }, KEY_ROWID + "=" + rowId, null, null, null, null, null, null);
+		Cursor mCursor = mDb.query(true, // true表示提取一行指定的内容
+				DATABASE_TABLE, new String[] { KEY_ROWID, KEY_TITLE, KEY_BODY }, KEY_ROWID + "="
+						+ rowId,// 指定查询条件
+				null, null, null, null, null, null);
 
 		if (mCursor != null) {
 			mCursor.moveToFirst();

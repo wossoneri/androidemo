@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android_notepad_demo"
+    package="com.example.android_database_demo"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="17"
+        android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
     <application
@@ -21,8 +21,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".NoteEdit" >
         </activity>
     </application>
 
