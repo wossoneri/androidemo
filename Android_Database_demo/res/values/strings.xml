@@ -4,5 +4,10 @@
     <string name="app_name">Android_Database_demo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="login_account">Input your username</string>
+    <string name="login_pwd">Input your password</string>
+    <string name="login_forget_pwd"><u>Forget password?</u></string>
+    <string name="login_regist">Regist</string>
+    <string name="login_login">Login</string>
 
 </resources>

@@ -1,8 +1,14 @@
-package com.example.android_database_demo;
+package demo.database;
 
 import android.provider.BaseColumns;
 
-public final class MyDbFields implements BaseColumns {
+public final class MyDbFields implements BaseColumns {// BaseColumns defines 2
+														// constant:_id and
+														// _count, in order to
+														// not write it wrong
+														// when dealing with
+														// database, so do this
+														// class
 
 	// public static final class Fields implements BaseColumns{
 	//

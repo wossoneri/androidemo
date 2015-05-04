@@ -1,16 +1,27 @@
-package com.example.android_database_demo;
+package demo.view.login;
+
+import com.example.android_database_demo.R;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
+	private head_portrait_view mPortrait;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		mPortrait = (head_portrait_view)findViewById(R.id.portrait);
+		
+		Bitmap bmp = BitmapFactory.decodeFile("sdcard/test.jpg");
+		mPortrait.setImageResource(R.drawable.a);
 	}
 
 	@Override
