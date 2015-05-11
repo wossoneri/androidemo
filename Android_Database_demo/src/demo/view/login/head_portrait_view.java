@@ -87,4 +87,8 @@ public class head_portrait_view extends ImageView {
 		mBitmap = bmp;
 		invalidate();
 	}
+	
+	public void longClick(){
+		
+	}
 }

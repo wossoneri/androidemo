@@ -16,11 +16,11 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.login);
 		
 		mPortrait = (head_portrait_view)findViewById(R.id.portrait);
 		
-		Bitmap bmp = BitmapFactory.decodeFile("sdcard/test.jpg");
+//		Bitmap bmp = BitmapFactory.decodeFile("sdcard/test.jpg");
 		mPortrait.setImageResource(R.drawable.a);
 	}
 
