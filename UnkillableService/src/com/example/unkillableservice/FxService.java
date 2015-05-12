@@ -80,6 +80,25 @@ public class FxService extends Service {
 		return null;
 	}
 
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (!MainActivity.getFlag()) {
+			Intent intent = new Intent();
+			intent.setAction("fxservice");
+			// intent.putExtra("Xpos", lastX);
+			// intent.putExtra("Ypos", lastY);
+			sendBroadcast(intent);
+			// Intent a = new Intent(FxService.this, FxService.class);
+			// startService(a);
+		}
+		unregisterReceiver(mBR);
+		if (mFloatLayout != null) {
+			mWindowManager.removeView(mFloatLayout);
+		}
+	}
+
 	private void createFloatView() {
 		wmParams = new WindowManager.LayoutParams();
 		// 获取WindowManagerImpl.CompatModeWrapper 其实就是window manager对象
@@ -161,26 +180,5 @@ public class FxService extends Service {
 			}
 		});
 	}
-
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		if (!MainActivity.getFlag()) {
-			Intent intent = new Intent();
-			intent.setAction("fxservice");
-			// intent.putExtra("Xpos", lastX);
-			// intent.putExtra("Ypos", lastY);
-			sendBroadcast(intent);
-//			Intent a = new Intent(FxService.this, FxService.class);
-//			startService(a);
-		}
-		unregisterReceiver(mBR);
-		if (mFloatLayout != null) {
-			mWindowManager.removeView(mFloatLayout);
-		}
-	}
-	
-	
 
 }

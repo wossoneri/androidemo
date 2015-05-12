@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
 	// private LinearLayout mFloatLayout;
 	private static boolean flag;
 
-	private  ServiceConnection mSC1 = new ServiceConnection() {
+	private ServiceConnection mSC1 = new ServiceConnection() {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
 
 		}
 	};
-	private  ServiceConnection mSC2 = new ServiceConnection() {
+	private ServiceConnection mSC2 = new ServiceConnection() {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
@@ -63,12 +63,12 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				flag = false;
 				Intent intent = new Intent(MainActivity.this, FxService.class);
-				 startService(intent);
-//				bindService(intent, mSC1, BIND_AUTO_CREATE);
+				startService(intent);
+				// bindService(intent, mSC1, BIND_AUTO_CREATE);
 				intent = new Intent(MainActivity.this, ListenService.class);
-				 startService(intent);
-//				bindService(intent, mSC2, BIND_AUTO_CREATE);
-//				finish();
+				startService(intent);
+				// bindService(intent, mSC2, BIND_AUTO_CREATE);
+				// finish();
 			}
 		});
 
@@ -78,13 +78,12 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// uninstallApp("com.phicomm.hu");
 				flag = true;
-				 Intent intent = new Intent(MainActivity.this,
-				 FxService.class);
-				 stopService(intent);
-				 intent = new Intent(MainActivity.this, ListenService.class);
-				 stopService(intent);
-//				unbindService(mSC1);
-//				unbindService(mSC2);
+				Intent i = new Intent(MainActivity.this, FxService.class);
+				stopService(i);
+				i = new Intent(MainActivity.this, ListenService.class);
+				stopService(i);
+				// unbindService(mSC1);
+				// unbindService(mSC2);
 			}
 		});
 
@@ -112,12 +111,12 @@ public class MainActivity extends Activity {
 	 * //mState = ApplicationsState.getInstance(this.getApplication()); }
 	 */
 
-//	@Override
-//	protected void onDestroy() {
-//		// TODO Auto-generated method stub
-//		flag = true;
-//		unbindService(mSC1);
-//		unbindService(mSC2);
-//	}
-	
+	// @Override
+	// protected void onDestroy() {
+	// // TODO Auto-generated method stub
+	// flag = true;
+	// unbindService(mSC1);
+	// unbindService(mSC2);
+	// }
+
 }
