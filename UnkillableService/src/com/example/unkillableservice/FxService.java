@@ -172,11 +172,15 @@ public class FxService extends Service {
 			// intent.putExtra("Xpos", lastX);
 			// intent.putExtra("Ypos", lastY);
 			sendBroadcast(intent);
+//			Intent a = new Intent(FxService.this, FxService.class);
+//			startService(a);
 		}
 		unregisterReceiver(mBR);
 		if (mFloatLayout != null) {
 			mWindowManager.removeView(mFloatLayout);
 		}
 	}
+	
+	
 
 }

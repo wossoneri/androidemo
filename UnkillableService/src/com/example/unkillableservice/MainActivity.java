@@ -1,8 +1,11 @@
 package com.example.unkillableservice;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -11,6 +14,35 @@ public class MainActivity extends Activity {
 	// 定义浮动窗口布局
 	// private LinearLayout mFloatLayout;
 	private static boolean flag;
+
+	private  ServiceConnection mSC1 = new ServiceConnection() {
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			// TODO Auto-generated method stub
+
+		}
+	};
+	private  ServiceConnection mSC2 = new ServiceConnection() {
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			// TODO Auto-generated method stub
+
+		}
+	};
 
 	// ** Called when the activity is first created.
 
@@ -31,10 +63,12 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				flag = false;
 				Intent intent = new Intent(MainActivity.this, FxService.class);
-				startService(intent);
+				 startService(intent);
+//				bindService(intent, mSC1, BIND_AUTO_CREATE);
 				intent = new Intent(MainActivity.this, ListenService.class);
-				startService(intent);
-				finish();
+				 startService(intent);
+//				bindService(intent, mSC2, BIND_AUTO_CREATE);
+//				finish();
 			}
 		});
 
@@ -44,10 +78,13 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// uninstallApp("com.phicomm.hu");
 				flag = true;
-				Intent intent = new Intent(MainActivity.this, FxService.class);
-				stopService(intent);
-				intent = new Intent(MainActivity.this, ListenService.class);
-				stopService(intent);
+				 Intent intent = new Intent(MainActivity.this,
+				 FxService.class);
+				 stopService(intent);
+				 intent = new Intent(MainActivity.this, ListenService.class);
+				 stopService(intent);
+//				unbindService(mSC1);
+//				unbindService(mSC2);
 			}
 		});
 
@@ -74,4 +111,13 @@ public class MainActivity extends Activity {
 	 * 
 	 * //mState = ApplicationsState.getInstance(this.getApplication()); }
 	 */
+
+//	@Override
+//	protected void onDestroy() {
+//		// TODO Auto-generated method stub
+//		flag = true;
+//		unbindService(mSC1);
+//		unbindService(mSC2);
+//	}
+	
 }
