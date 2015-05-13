@@ -24,6 +24,11 @@ public class MainActivity extends Activity {
 
 	private static boolean flag;
 
+	Calendar cal;
+	PendingIntent pi;
+	AlarmManager mAlarmManagerA;
+	AlarmManager mAlarmManagerB;
+	
 	String tag = "service";
 	private ServiceConnection connA = new ServiceConnection() {
 
@@ -73,10 +78,10 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				flag = false;
 
-//				Calendar cal = Calendar.getInstance();
-//				PendingIntent pi;
-//				AlarmManager mAlarmManagerA = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-//				AlarmManager mAlarmManagerB = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//				cal = Calendar.getInstance();
+//				
+//				mAlarmManagerA = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//				mAlarmManagerB = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 				
 				Intent a = new Intent(MainActivity.this, ServiceA.class);
 				startService(a);
@@ -104,10 +109,12 @@ public class MainActivity extends Activity {
 				Intent i = new Intent(MainActivity.this, ServiceA.class);
 				// unbindService(connA);
 				stopService(i);
+//				mAlarmManagerA.cancel(pi);
 
 				i = new Intent(MainActivity.this, ServiceB.class);
 				// unbindService(connB);
 				stopService(i);
+//				mAlarmManagerB.cancel(pi);
 			}
 		});
 	}
