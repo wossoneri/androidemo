@@ -15,34 +15,34 @@ public class MainActivity extends Activity {
 	// private LinearLayout mFloatLayout;
 	private static boolean flag;
 
-	private ServiceConnection mSC1 = new ServiceConnection() {
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
-
-		}
-	};
-	private ServiceConnection mSC2 = new ServiceConnection() {
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
-
-		}
-	};
+//	private ServiceConnection mSC1 = new ServiceConnection() {
+//
+//		@Override
+//		public void onServiceDisconnected(ComponentName name) {
+//			// TODO Auto-generated method stub
+//
+//		}
+//
+//		@Override
+//		public void onServiceConnected(ComponentName name, IBinder service) {
+//			// TODO Auto-generated method stub
+//
+//		}
+//	};
+//	private ServiceConnection mSC2 = new ServiceConnection() {
+//
+//		@Override
+//		public void onServiceDisconnected(ComponentName name) {
+//			// TODO Auto-generated method stub
+//
+//		}
+//
+//		@Override
+//		public void onServiceConnected(ComponentName name, IBinder service) {
+//			// TODO Auto-generated method stub
+//
+//		}
+//	};
 
 	// ** Called when the activity is first created.
 
@@ -62,10 +62,10 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				flag = false;
-				Intent intent = new Intent(MainActivity.this, FxService.class);
+				Intent intent = new Intent(MainActivity.this, ServiceA.class);
 				startService(intent);
 				// bindService(intent, mSC1, BIND_AUTO_CREATE);
-				intent = new Intent(MainActivity.this, ListenService.class);
+				intent = new Intent(MainActivity.this, ServiceB.class);
 				startService(intent);
 				// bindService(intent, mSC2, BIND_AUTO_CREATE);
 				// finish();
@@ -78,9 +78,9 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// uninstallApp("com.phicomm.hu");
 				flag = true;
-				Intent i = new Intent(MainActivity.this, FxService.class);
+				Intent i = new Intent(MainActivity.this, ServiceA.class);
 				stopService(i);
-				i = new Intent(MainActivity.this, ListenService.class);
+				i = new Intent(MainActivity.this, ServiceB.class);
 				stopService(i);
 				// unbindService(mSC1);
 				// unbindService(mSC2);

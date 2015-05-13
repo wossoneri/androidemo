@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class FxService extends Service {
+public class ServiceA extends Service {
 	private BroadcastReceiver mBR;
 	private IntentFilter mIF;
 	// 定义浮动窗口布局
@@ -39,21 +39,21 @@ public class FxService extends Service {
 
 	private float lastX = 0;
 	private float lastY = 0;
-	private boolean flag = false;
 
-	private static final String TAG = "FxService";
+	private static final String TAG = "service";
 
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		Log.i(TAG, "oncreat");
+		Log.v(TAG, "Service A created");
 
 		mBR = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				// TODO Auto-generated method stub
-				Intent a = new Intent(FxService.this, ListenService.class);
+				Log.v(TAG, "Service A receive broadcast");
+				Intent a = new Intent(ServiceA.this, ServiceB.class);
 				startService(a);
 			}
 		};
@@ -70,6 +70,7 @@ public class FxService extends Service {
 		// return super.onStartCommand(intent, flags, startId);
 		// lastX = intent.getFloatExtra("Xpos", 0);
 		// lastY = intent.getFloatExtra("Ypos", 0);
+		Log.v(TAG, "Service A start command");
 		createFloatView();
 		return Service.START_STICKY;
 	}
@@ -84,12 +85,15 @@ public class FxService extends Service {
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		Log.v(TAG, "Service A destroyed");
+		
 		if (!MainActivity.getFlag()) {
 			Intent intent = new Intent();
 			intent.setAction("fxservice");
 			// intent.putExtra("Xpos", lastX);
 			// intent.putExtra("Ypos", lastY);
 			sendBroadcast(intent);
+			Log.v(TAG, "Service A send broadcast");
 			// Intent a = new Intent(FxService.this, FxService.class);
 			// startService(a);
 		}
@@ -176,7 +180,7 @@ public class FxService extends Service {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(FxService.this, "onClick", Toast.LENGTH_SHORT).show();
+				Toast.makeText(ServiceA.this, "onClick", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
