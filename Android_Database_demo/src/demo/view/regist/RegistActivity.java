@@ -1,33 +1,27 @@
-package demo.view.login;
-
-import com.example.android_database_demo.R;
+package demo.view.regist;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends Activity {
+import com.example.android_database_demo.R;
 
-	private head_portrait_view mPortrait;
-	
+public class RegistActivity extends Activity {
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login);
+		setContentView(R.layout.regist);
 		
-		mPortrait = (head_portrait_view)findViewById(R.id.portrait);
+		getActionBar().hide();
 		
-//		Bitmap bmp = BitmapFactory.decodeFile("sdcard/test.jpg");
-		mPortrait.setImageResource(R.drawable.a);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.regist, menu);
 		return true;
 	}
 

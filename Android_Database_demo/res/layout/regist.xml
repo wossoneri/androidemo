@@ -20,66 +20,81 @@
         android:orientation="vertical" >
 
         <demo.view.login.head_portrait_view
-            android:id="@+id/login_my_portrait"
+            android:id="@+id/regist_my_portrait"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/guest" />
-
-        <TextView
-            android:id="@+id/login_success"
+        
+        <TextView 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/login_text_color"
-            android:visibility="gone" />
+            android:text="@string/regist_change_head"/>
 
         <EditText
-            android:id="@+id/login_et_account"
+            android:id="@+id/regist_et_account"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/components_large_margin"
-            android:hint="@string/login_account"
+            android:layout_marginTop="@dimen/components_standard_margin"
+            android:hint="@string/regist_account_hint"
             android:inputType="text"
             android:textColor="@color/login_input_text_color"
             android:textColorHint="@color/login_hint_text_color" />
 
         <EditText
-            android:id="@+id/login_et_pwd"
+            android:id="@+id/regist_et_pwd"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/components_standard_margin"
-            android:hint="@string/login_pwd"
+            android:hint="@string/regist_pwd_hint"
             android:inputType="textPassword"
             android:textColor="@color/login_input_text_color"
             android:textColorHint="@color/login_hint_text_color" />
 
-        <TextView
-            android:id="@+id/login_tv_forget_pwd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/components_small_margin"
-            android:text="@string/login_forget_pwd"
-            android:textColor="@color/login_text_color" />
-
-        <Button
-            android:id="@+id/login_btn_login"
+        <EditText
+            android:id="@+id/regist_et_pwd_confirm"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/components_standard_margin"
-            android:text="@string/login_login"
-            android:textColor="@color/login_btn_text_color" />
-
-        <Button
-            android:id="@+id/login_btn_regist"
+            android:hint="@string/regist_pwd_confirm"
+            android:inputType="textPassword"
+            android:textColor="@color/login_input_text_color"
+            android:textColorHint="@color/login_hint_text_color" />
+        
+        <EditText
+            android:id="@+id/regist_et_question"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/components_standard_margin"
+            android:hint="@string/regist_question"
+            android:inputType="text"
+            android:textColor="@color/login_input_text_color"
+            android:textColorHint="@color/login_hint_text_color" />
+        
+        <EditText
+            android:id="@+id/regist_et_answer"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/components_standard_margin"
+            android:hint="@string/regist_answer"
+            android:inputType="text"
+            android:textColor="@color/login_input_text_color"
+            android:textColorHint="@color/login_hint_text_color" />
+
+        <Button
+            android:id="@+id/regist_btn_submit"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginTop="@dimen/components_large_margin"
-            android:text="@string/login_regist"
+            android:text="@string/regist_submit"
             android:textColor="@color/login_btn_text_color" />
     </LinearLayout>
 

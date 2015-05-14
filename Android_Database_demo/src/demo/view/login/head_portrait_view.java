@@ -6,12 +6,14 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import com.example.android_database_demo.R;
 
 public class head_portrait_view extends ImageView {
 
@@ -19,12 +21,12 @@ public class head_portrait_view extends ImageView {
 
 	private static final int RADIUS = 50;
 	private static final int DIAMETER = RADIUS * 2;
+	private static final int CIRCLE_LINE_WIDTH = 2;
 
 	// construcor
 	public head_portrait_view(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
-		
 	}
 
 	public head_portrait_view(Context context, AttributeSet attrs) {
@@ -38,20 +40,47 @@ public class head_portrait_view extends ImageView {
 	}
 
 	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		// TODO Auto-generated method stub
+		setMeasuredDimension((RADIUS + CIRCLE_LINE_WIDTH) * 2, (RADIUS + CIRCLE_LINE_WIDTH) * 2);
+	}
+
+	@Override
 	protected void onDraw(Canvas canvas) {
 		// TODO Auto-generated method stub
+
 		Drawable drawable = getDrawable();
 		if (drawable == null)
 			return;
 
-		Bitmap b = ((BitmapDrawable)drawable).getBitmap();
+		if (getWidth() == 0 || getHeight() == 0) {
+			return;
+		}
+
+		Bitmap b = ((BitmapDrawable) drawable).getBitmap();
+		if (null == b) {
+			return;
+		}
+
 		Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
-		
+
 		Bitmap bmp = getCircleBmp(bitmap);
-		canvas.drawBitmap(bmp, getWidth() / 2 - RADIUS, getHeight() / 2 - RADIUS, null);
+
+		drawCircleBorder(canvas);
+		canvas.drawBitmap(bmp, CIRCLE_LINE_WIDTH, CIRCLE_LINE_WIDTH, null);
 	}
 
-	private void init() {
+	private void drawCircleBorder(Canvas canvas) {
+		Paint mCircleLinePaint = new Paint();
+		mCircleLinePaint.setColor(getResources().getColor(R.color.login_head_border_color));
+		mCircleLinePaint.setStrokeWidth(CIRCLE_LINE_WIDTH);
+		mCircleLinePaint.setStyle(Paint.Style.STROKE);
+		mCircleLinePaint.setStrokeJoin(Paint.Join.ROUND);
+		mCircleLinePaint.setAntiAlias(true);
+		mCircleLinePaint.setFilterBitmap(true);
+		mCircleLinePaint.setDither(true);
+		canvas.drawCircle(RADIUS + CIRCLE_LINE_WIDTH, RADIUS + CIRCLE_LINE_WIDTH, RADIUS,
+				mCircleLinePaint);
 
 	}
 
@@ -87,8 +116,8 @@ public class head_portrait_view extends ImageView {
 		mBitmap = bmp;
 		invalidate();
 	}
-	
-	public void longClick(){
-		
+
+	public void longClick() {
+
 	}
 }

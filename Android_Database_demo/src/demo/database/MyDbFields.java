@@ -18,19 +18,31 @@ public final class MyDbFields implements BaseColumns {// BaseColumns defines 2
 		// TODO Auto-generated constructor stub
 	}
 
-	public static final String TABLE_NAME = "regist";
+	public static final String TABLE_NAME = "myLogin";
 
 	/**
 	 * user name to login <b> Type: text </b>
 	 */
 	public static final String COLUMN_ACCOUNT = "account";
+
 	/**
 	 * password for account <b> Type: text </b>
 	 */
 	public static final String COLUMN_PASSWORD = "pwd";
+
+	/**
+	 * question for account <b> Type: text </b>
+	 */
+	public static final String COLUMN_QUESTION = "question";
+
+	/**
+	 * answer to the question <b> Type: text </b>
+	 */
+	public static final String COLUMN_ANSWER = "answer";
+
 	/**
 	 * regist time <b> Type: INTEGER (long from System.currentTimeMillis()) </b>
 	 */
-	public static final String COLUMN_REGIST_TIME = "registed";
+	public static final String COLUMN_REGIST_TIME = "created";
 
 }

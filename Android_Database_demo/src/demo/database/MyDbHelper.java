@@ -14,7 +14,7 @@ public class MyDbHelper {
 	private static final int DATABASE_VERSION = 2;
 
 	private final Context mContext;
-	private DbOpenHelper mDbHelper;
+	private DbHelper mDbHelper;
 	private SQLiteDatabase mDb;
 
 	public MyDbHelper(Context mc) {
@@ -22,20 +22,24 @@ public class MyDbHelper {
 	}
 
 	public MyDbHelper open() throws SQLException {
-		mDbHelper = new DbOpenHelper(mContext);
+		mDbHelper = new DbHelper(mContext);
 		mDb = mDbHelper.getWritableDatabase();// 拿到外面去 每次操作数据库前调用这句
 
 		return this;
 	}
 
 	public void close() {
+		mDb.close();
 		mDbHelper.close();
 	}
 
-	public long createEntry(String account, String pwd) {
+	public long createEntry(String account, String pwd, String ques, String ans, int time) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(MyDbFields.COLUMN_ACCOUNT, account);
 		initialValues.put(MyDbFields.COLUMN_PASSWORD, pwd);
+		initialValues.put(MyDbFields.COLUMN_QUESTION, ques);
+		initialValues.put(MyDbFields.COLUMN_ANSWER, ans);
+		initialValues.put(MyDbFields.COLUMN_REGIST_TIME, time);
 
 		return mDb.insert(MyDbFields.TABLE_NAME, null, initialValues);
 	}
@@ -72,23 +76,29 @@ public class MyDbHelper {
 	
 	
 	
-	
-	private static class DbOpenHelper extends SQLiteOpenHelper {
+	/**
+	 * 创建，打开，升级数据库
+	 * @author du
+	 * @blog   http://www.cnblogs.com/rossoneri/
+	 */
+	private static class DbHelper extends SQLiteOpenHelper {
 
-		public DbOpenHelper(Context context) {
+		public DbHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		public void onCreate(SQLiteDatabase db) {
+		public void onCreate(SQLiteDatabase db) { // create DB
 			// TODO Auto-generated method stub
 			db.execSQL("CREATE TABLE " + MyDbFields.TABLE_NAME + " (" 
 					+ MyDbFields._ID + " INTEGER PRIMARY KEY," 
 					+ MyDbFields.COLUMN_ACCOUNT + " TEXT,"
-					+ MyDbFields.COLUMN_PASSWORD + " TEXT," 
-					+ MyDbFields.COLUMN_REGIST_TIME
-					+ " INTEGER" + ");");
+					+ MyDbFields.COLUMN_PASSWORD + " TEXT,"
+					+ MyDbFields.COLUMN_QUESTION + " TEXT,"
+					+ MyDbFields.COLUMN_ANSWER + " TEXT,"
+					+ MyDbFields.COLUMN_REGIST_TIME + " INTEGER"
+					+ ");");
 		}
 
 		@Override
