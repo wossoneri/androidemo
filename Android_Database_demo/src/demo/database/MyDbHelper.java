@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class MyDbHelper {
 	private static final String TAG = "MyDB";
-	private static final String DATABASE_NAME = "MyTestDB.db";
+	private static final String DATABASE_NAME = "MyLoginDB.db";
 	private static final int DATABASE_VERSION = 2;
 
 	private final Context mContext;
@@ -23,7 +23,7 @@ public class MyDbHelper {
 
 	public MyDbHelper open() throws SQLException {
 		mDbHelper = new DbHelper(mContext);
-		mDb = mDbHelper.getWritableDatabase();// 拿到外面去 每次操作数据库前调用这句
+		mDb = mDbHelper.getWritableDatabase();
 
 		return this;
 	}
@@ -33,39 +33,63 @@ public class MyDbHelper {
 		mDbHelper.close();
 	}
 
-	public long createEntry(String account, String pwd, String ques, String ans, int time) {
+	// 创建一个条目 插入到数据库
+	public long createEntry(String account, String pwd, String ques, String ans, String path, long time) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(MyDbFields.COLUMN_ACCOUNT, account);
 		initialValues.put(MyDbFields.COLUMN_PASSWORD, pwd);
 		initialValues.put(MyDbFields.COLUMN_QUESTION, ques);
 		initialValues.put(MyDbFields.COLUMN_ANSWER, ans);
+		initialValues.put(MyDbFields.COLUMN_PATH, path);
 		initialValues.put(MyDbFields.COLUMN_REGIST_TIME, time);
 
 		return mDb.insert(MyDbFields.TABLE_NAME, null, initialValues);
 	}
 
-	public boolean deleteEntry(long id) {
-		return mDb.delete(MyDbFields.TABLE_NAME, MyDbFields._ID + "=" + id, null) > 0;
+	// 通过account删除条目
+	public boolean deleteEntry(String account) {
+		return mDb.delete(MyDbFields.TABLE_NAME, MyDbFields.COLUMN_ACCOUNT + " = \"" + account + "\"", null) > 0;
 	}
 
-	public boolean updateTable(long id, String account, String pwd) {
+	// 改头像
+	public boolean updateHeadPortrait(String account, String path) { //只能改密码和头像 
 		ContentValues args = new ContentValues();
-		args.put(MyDbFields.COLUMN_ACCOUNT, account);
+		args.put(MyDbFields.COLUMN_PATH, path);
+		return mDb.update(MyDbFields.TABLE_NAME, args, MyDbFields.COLUMN_ACCOUNT + " = \"" + account + "\"", null) > 0;
+	}
+	
+	// 改密码
+	public boolean updatePwd(String account, String pwd){
+		ContentValues args = new ContentValues();
 		args.put(MyDbFields.COLUMN_PASSWORD, pwd);
-
-		return mDb.update(MyDbFields.TABLE_NAME, args, MyDbFields._ID + "=" + id, null) > 0;
+		return mDb.update(MyDbFields.TABLE_NAME, args, MyDbFields.COLUMN_ACCOUNT + " = \"" + account + "\"", null) > 0;
 	}
 	
+	// 查找所有条目
 	public Cursor fetchAllEntries(){
-		return mDb.query(MyDbFields.TABLE_NAME,//
-				new String[]{MyDbFields._ID, MyDbFields.COLUMN_ACCOUNT, MyDbFields.COLUMN_PASSWORD},
-				null,null, null, null, null);
+		return mDb.query(MyDbFields.TABLE_NAME,//查找表
+				new String[]{MyDbFields._ID, 
+							 MyDbFields.COLUMN_ACCOUNT,
+							 MyDbFields.COLUMN_PASSWORD,
+							 MyDbFields.COLUMN_QUESTION,
+							 MyDbFields.COLUMN_ANSWER,
+							 MyDbFields.COLUMN_PATH,
+							 MyDbFields.COLUMN_REGIST_TIME},//要获取的列，我取所有列
+				null,null, null, null, null);	//全空为默认，取所有结果，不分组，不排序
 	}
 	
-	public Cursor fetchEntry(long id) throws SQLException{
-		Cursor mCursor = mDb.query(true,
-				MyDbFields.TABLE_NAME, new String[]{MyDbFields._ID, MyDbFields.COLUMN_ACCOUNT,MyDbFields.COLUMN_PASSWORD},
-				MyDbFields._ID+"=" + id,
+	// 查找某id
+	public Cursor fetchEntry(String account) throws SQLException{
+		Cursor mCursor = mDb.query(true, // 只取一个结果
+				MyDbFields.TABLE_NAME,
+				new String[]{MyDbFields._ID, 
+							 MyDbFields.COLUMN_ACCOUNT,
+							 MyDbFields.COLUMN_PASSWORD,
+							 MyDbFields.COLUMN_QUESTION,
+							 MyDbFields.COLUMN_ANSWER,
+							 MyDbFields.COLUMN_PATH,
+							 MyDbFields.COLUMN_REGIST_TIME},
+				MyDbFields.COLUMN_ACCOUNT + " = \"" + account + "\"",
 				null, null, null, null, null, null);
 		
 		if(mCursor != null){
@@ -77,9 +101,7 @@ public class MyDbHelper {
 	
 	
 	/**
-	 * 创建，打开，升级数据库
-	 * @author du
-	 * @blog   http://www.cnblogs.com/rossoneri/
+	 * 创建，升级数据库
 	 */
 	private static class DbHelper extends SQLiteOpenHelper {
 
@@ -97,6 +119,7 @@ public class MyDbHelper {
 					+ MyDbFields.COLUMN_PASSWORD + " TEXT,"
 					+ MyDbFields.COLUMN_QUESTION + " TEXT,"
 					+ MyDbFields.COLUMN_ANSWER + " TEXT,"
+					+ MyDbFields.COLUMN_PATH + " TEXT,"
 					+ MyDbFields.COLUMN_REGIST_TIME + " INTEGER"
 					+ ");");
 		}

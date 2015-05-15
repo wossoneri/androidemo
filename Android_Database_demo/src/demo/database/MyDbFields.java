@@ -41,6 +41,11 @@ public final class MyDbFields implements BaseColumns {// BaseColumns defines 2
 	public static final String COLUMN_ANSWER = "answer";
 
 	/**
+	 * head portrait image path <b> Type: text </b>
+	 */
+	public static final String COLUMN_PATH = "path";
+
+	/**
 	 * regist time <b> Type: INTEGER (long from System.currentTimeMillis()) </b>
 	 */
 	public static final String COLUMN_REGIST_TIME = "created";
