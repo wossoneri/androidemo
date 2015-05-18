@@ -1,4 +1,4 @@
-package demo.view.regist;
+package demo.DataBaseDemo.View;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.android_database_demo.R;
 
-import demo.database.MyDbHelper;
+import demo.DataBaseDemo.DBHelper.MyDbHelper;
 
 public class RegistActivity extends Activity implements OnClickListener {
 

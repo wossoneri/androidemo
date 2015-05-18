@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="demo.view.login.LoginActivity"
+            android:name="demo.DataBaseDemo.View.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="demo.view.regist.RegistActivity"
+            android:name="demo.DataBaseDemo.View.RegistActivity"
             android:label="@string/title_activity_regist" >
         </activity>
     </application>

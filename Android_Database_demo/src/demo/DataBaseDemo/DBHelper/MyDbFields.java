@@ -1,4 +1,4 @@
-package demo.database;
+package demo.DataBaseDemo.DBHelper;
 
 import android.provider.BaseColumns;
 

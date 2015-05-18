@@ -1,4 +1,4 @@
-package demo.view.login;
+package demo.DataBaseDemo.View;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,9 +14,8 @@ import android.widget.Toast;
 
 import com.example.android_database_demo.R;
 
-import demo.database.MyDbFields;
-import demo.database.MyDbHelper;
-import demo.view.regist.RegistActivity;
+import demo.DataBaseDemo.DBHelper.MyDbFields;
+import demo.DataBaseDemo.DBHelper.MyDbHelper;
 
 public class LoginActivity extends Activity implements OnClickListener {
 

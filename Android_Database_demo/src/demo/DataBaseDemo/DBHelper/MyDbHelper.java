@@ -1,4 +1,4 @@
-package demo.database;
+package demo.DataBaseDemo.DBHelper;
 
 import android.content.ContentValues;
 import android.content.Context;

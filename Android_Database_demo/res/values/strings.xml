@@ -12,10 +12,10 @@
 
     <color name="login_hint_text_color">#ADADAD</color>
     <color name="login_input_text_color">#FFD700</color>
-    <color name="login_bg_color">#9100E7</color>
-    <color name="login_btn_text_color">#FFED97</color>
-    <color name="login_head_border_color">#FFD700</color>
-    <color name="login_text_color">#C7C7E2</color>
+    <color name="login_bg_color">#652d86</color>
+    <color name="login_btn_text_color">#fdc82f</color>
+    <color name="login_head_border_color">#fdc82f</color>
+    <color name="login_text_color">#fdc82f</color>
 
     <string name="title_activity_regist">RegistActivity</string>
     <string name="regist_change_head">Click to select your head portrait</string>
@@ -30,4 +30,8 @@
     <string name="db_success">Operate Success</string>
     <string name="logined">User:%1$s has logined successfully!</string>
 
+    <string name="menu_take_photo">Take Photo</string>
+    <string name="menu_choose_from_photos">Choose from Photos</string>
+    <string name="menu_cancel">Cancel</string>
+    <color name="menu_bg">#B084C9</color>
 </resources>
