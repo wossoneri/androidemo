@@ -34,4 +34,5 @@
     <string name="menu_choose_from_photos">Choose from Photos</string>
     <string name="menu_cancel">Cancel</string>
     <color name="menu_bg">#B084C9</color>
+    <color name="menu_margin_bg">#281236</color>
 </resources>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/menu_margin_bg"
     android:orientation="vertical" >
 
     <Button
@@ -9,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/menu_bg"
-        android:text="@string/menu_take_photo" />
+        android:text="@string/menu_take_photo"
+        android:textColor="@color/login_btn_text_color" />
 
     <Button
         android:id="@+id/menu_choose_from_photo"
@@ -18,13 +20,15 @@
         android:layout_marginBottom="5dp"
         android:layout_marginTop="1dp"
         android:background="@color/menu_bg"
-        android:text="@string/menu_choose_from_photos" />
+        android:text="@string/menu_choose_from_photos"
+        android:textColor="@color/login_btn_text_color" />
 
     <Button
         android:id="@+id/menu_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/menu_bg"
-        android:text="@string/menu_cancel" />
+        android:text="@string/menu_cancel"
+        android:textColor="@color/login_btn_text_color" />
 
 </LinearLayout>

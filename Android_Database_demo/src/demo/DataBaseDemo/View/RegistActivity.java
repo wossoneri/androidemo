@@ -1,19 +1,27 @@
 package demo.DataBaseDemo.View;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.android_database_demo.R;
 
 import demo.DataBaseDemo.DBHelper.MyDbHelper;
+import demo.DataBaseDemo.View.head_portrait_menu_view.CloseDlgInterface;
 
-public class RegistActivity extends Activity implements OnClickListener {
+public class RegistActivity extends Activity implements OnClickListener, CloseDlgInterface {
 
 	// private head_portrait_view mPortrait;
 	private EditText[] mEt;
@@ -25,8 +33,9 @@ public class RegistActivity extends Activity implements OnClickListener {
 	// private EditText mEtAns;
 
 	// private Button mBtnSubmit;
-
+	private head_portrait_menu_view mMenuView;
 	private MyDbHelper mDbHelper;
+	private AlertDialog mMenuDlg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,9 @@ public class RegistActivity extends Activity implements OnClickListener {
 
 		findViewById(R.id.regist_my_portrait).setOnClickListener(this);
 		findViewById(R.id.regist_btn_submit).setOnClickListener(this);
+
+		mMenuView = new head_portrait_menu_view(this);
+		mMenuView.setCloseInterface(this);
 	}
 
 	@Override
@@ -54,9 +66,20 @@ public class RegistActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.regist_my_portrait:
+			if (mMenuDlg == null)
+				createMenuDialog();
+			mMenuDlg.show();
+
+			// 获得屏幕尺寸
+			DisplayMetrics dm = new DisplayMetrics();
+			this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+			// 设置宽度
+			WindowManager.LayoutParams lp = mMenuDlg.getWindow().getAttributes();
+			lp.width = dm.widthPixels;
+			mMenuDlg.getWindow().setAttributes(lp);
 
 			break;
-		case R.id.regist_btn_submit:	//还需要判断一下输入的 account 必须唯一
+		case R.id.regist_btn_submit: // 还需要判断一下输入的 account 必须唯一
 			for (int i = 0; i < 5; i++) {
 				if (mEt[i].getText().length() == 0) {
 					showToast(i);
@@ -74,12 +97,9 @@ public class RegistActivity extends Activity implements OnClickListener {
 
 			mDbHelper = new MyDbHelper(this);
 			mDbHelper.open();
-			long id = mDbHelper.createEntry(mEt[0].getText().toString(),
-											mEt[1].getText().toString(),
-											mEt[3].getText().toString(),
-											mEt[4].getText().toString(),
-											path,
-											System.currentTimeMillis());
+			long id = mDbHelper.createEntry(mEt[0].getText().toString(), mEt[1].getText()
+					.toString(), mEt[3].getText().toString(), mEt[4].getText().toString(), path,
+					System.currentTimeMillis());
 
 			if (-1 == id) {
 				Toast.makeText(this, "Regist failed", Toast.LENGTH_SHORT).show();
@@ -125,13 +145,29 @@ public class RegistActivity extends Activity implements OnClickListener {
 		Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
 	}
 
+	private void createMenuDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+		builder.setCancelable(true);
+		builder.setView(mMenuView.getViewGroup());
+		mMenuDlg = builder.create();
+		Window w = mMenuDlg.getWindow();
+		w.setGravity(Gravity.BOTTOM);
+
+	}
+
 	// /////////////////////////////////////////////////////////////////////////
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-//		mDbHelper.close();
+		// mDbHelper.close();
 	}
 
 	@Override
@@ -151,6 +187,13 @@ public class RegistActivity extends Activity implements OnClickListener {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void closeDialog() {
+		// TODO Auto-generated method stub
+		if (mMenuDlg.isShowing())
+			mMenuDlg.dismiss();
 	}
 
 }
