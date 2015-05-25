@@ -4,12 +4,12 @@
 
 一个服务本质上讲有两种形式：
 
-Started
+Started 启动的
 >`started`形式的服务是指当一个应用组件(比如`activity`)通过startService()方法开启的服务。一旦开启，该服务就可以<font color="red"><b>无限期</b></font>地在后台运行，哪怕开启它的组件被销毁掉。
 >通常,开启的服务执行一个单独的操作且并不向调用者返回一个结果。
 >比如，可能从网络进行下载或者上传一个文件。当任务完成，服务就该自我停止。
 
-Bound
+Bound 绑定的
 >`bound`形式的服务是指一个应用组件通过调用 bindService() 方法与服务绑定。一个绑定的服务提供一个客户-服务端接口，以允许组件与服务交互，发送请求，获得结果，甚至执行进程间通信。一个绑定的服务只和与其绑定的组件同时运行。多个组件可以同时绑定到一个服务，但当全部接触绑定后，服务就被销毁。
 
 &emsp;&emsp;虽然分这两类，但是一个服务可以同时使用这两种方式——可以用`started`无限期的运行，同时允许绑定。只需要在服务中实现两个回调方法：<i>onStartCommand()</i>允许组件开启服务，<i>onBind()</i>允许绑定。
@@ -80,7 +80,187 @@ Bound
 
     如果属性未设置，会由`<application>`权限设置情况应用到服务。如果两者都未设置，服务就不受权限保护。
 * <font color="green">android:process</font>
-	服务运行所在的进程名。通常为默认为应用程序所在的进程，与包名同名。`<application>`元素的属性`process'可以设置不同的进程名，当然组件也可设置自己的进程覆盖应用的设置。
+	服务运行所在的进程名。通常为默认为应用程序所在的进程，与包名同名。`<application>`元素的属性`process`可以设置不同的进程名，当然组件也可设置自己的进程覆盖应用的设置。
 
     如果名称设置为冒号`：`开头，一个对应用程序私有的新进程会在需要时和运行到这个进程时建立。如果名称为小写字母开头，服务会在一个相同名字的全局进程运行，如果有权限这样的话。这允许不同应用程序的组件可以分享一个进程，减少了资源的使用。
 
+####创建“启动的”服务
+&emsp;&emsp;启动的(started)服务由startService(Intent)方法启动，在服务中的onStartCommand()方法里获得Intent信息。关闭则由服务自己的方法stopSelf()或者由启动服务的地方调用stopService(Intent)方法来关闭。并不会因为启动服务的应用程序销毁而关闭。
+
+&emsp;&emsp;示例，一个应用需要保存数据到远程数据库，这时启动一个服务，通过创建启动的服务给服务传递数据，由服务执行保存行为，行为结束再自我销毁。因为服务跟启动它的应用在一个进程的主线程中，所以对于耗时的操作要起一个新的线程去做。
+```java
+//activity中
+Intent intent = new Intent(MainActivity.this, ServiceA.class);
+intent.putExtra("name", strName);
+startService(intent);
+
+//service中
+@Override
+public int onStartCommand(Intent intent, int flags, int startId) {
+	// TODO Auto-generated method stub
+    // 获取数据
+	String strName = intent.getStringExtra("name");
+	// ... 数据库操作
+    new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				耗时的操作
+			}
+		}).run();
+	return Service.START_STICKY;
+}
+```
+
+写服务有2种，继承`service`或者`IntentService`。后者是前者的子类。前者包含上面介绍的各种方法，用于普通的服务。后者可以自己开一个工作线程一个接一个处理多个请求。
+
+#####继承IntentService
+大多数服务不需要同时处理多个请求，继承IntentService是最好的选择
+
+IntentService处理流程
+* 创建默认的一个`worker`线程处理传递给 onStartCommand() 的所有`intent`，不占据应用的主线程
+* 创建一个工作队列一次传递一个`intent`到你实现的 onHandleIntent() 方法，避免了多线程
+* 在所以启动请求被处理后自动关闭服务，不需要调用 stopSelf()
+* 默认提供 onBind() 的实现，并返回`null`
+* 默认提供 onStartCommand() 的实现，实现发送`intent`到工作队列再到你的 onHandleIntent() 方法实现。
+
+这些都加入到IntentService中了，你需要做的就是实现构造方法和onHandleIntent()，如下：
+```java
+public class HelloIntentService extends IntentService {
+
+  /**
+   * A constructor is required, and must call the super IntentService(String)
+   * constructor with a name for the worker thread.
+   */
+  public HelloIntentService() {
+      super("HelloIntentService");
+  }
+
+  /**
+   * The IntentService calls this method from the default worker thread with
+   * the intent that started the service. When this method returns, IntentService
+   * stops the service, as appropriate.
+   */
+  @Override
+  protected void onHandleIntent(Intent intent) {
+      // Normally we would do some work here, like download a file.
+      // For our sample, we just sleep for 5 seconds.
+      long endTime = System.currentTimeMillis() + 5*1000;
+      while (System.currentTimeMillis() < endTime) {
+          synchronized (this) {
+              try {
+                  wait(endTime - System.currentTimeMillis());
+              } catch (Exception e) {
+              }
+          }
+      }
+  }
+}
+```
+如果需要重写其他回调方法，如 onCreate,onStartCommand等，一定要调用super方法，保证IntentService正确处理worker线程，只有onHandleIntent和onBind不需要这样。如：
+```java
+@Override
+public int onStartCommand(Intent intent, int flags, int startId) {
+    Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+    return super.onStartCommand(intent,flags,startId);
+}
+```
+#####继承Service
+继承Service就可以实现对请求多线程的处理，前面介绍了service的生命周期，可以按照生命周期实现方法。就不放示例了。
+
+onStartCommand()的返回值
+返回一个整型值，用来描述系统在杀掉服务后是否要继续启动服务，返回值有三种：
+* <font color="#0099cc">START_NOT_STICKY</font>
+	系统不重新创建服务，除非有将要传递来的intent。这是最安全的选项，可以避免在不必要的时候运行服务。
+* <font color="#0099cc">START_STICKY</font>
+	系统重新创建服务并且调用onStartCommand()方法，但并不会传递最后一次传递的intent，只是传递一个空的intent。除非存在将要传递来的intent，那么就会传递这些intent。这个适合播放器一类的服务，不需要执行命令，只需要独自运行，等待任务。
+* <font color="#0099cc">START_REDELIVER_INTENT</font>
+	系统重新创建服务并且调用onStartCommand()方法，传递最后一次传递的intent。其余存在的需要传递的intent会按顺序传递进来。这适合像下载一样的服务，立即恢复，积极执行。
+
+如果想从服务获得结果，可以用广播来处理
+
+
+
+####创建“绑定的”服务
+
+* 用bindService()方法将应用组件绑定到服务，建立一个长时间保持的联系。
+* 如果需要在activity或其他组件和服务交互或者通过进程间通信给其他应用程序提供本应用的功能，就需要绑定的服务。
+* 建立一个绑定的服务需要实现onBind()方法返回一个定义了与服务通信接口的IBinder对象。其他应用程序组件可以调用bindService()方法获取接口并且调用服务上的方法。
+* 创建一个绑定的服务，第一件事就是定义一个说明客户端与服务通信方式的接口。这个接口必须是IBinder的实现，并且必须要从onBind()方法返回。一旦客户端接收到了IBinder，就可以通过这个接口进行交互。
+* 多个客户端可以绑定到一个服务，可以用unbindService()方法解除绑定，当没有组件绑定在服务上，这个服务就会被销毁。
+
+```java
+//activity中
+private ServiceConnection connB = new ServiceConnection() {
+
+	@Override
+	public void onServiceDisconnected(ComponentName name) {
+		// TODO Auto-generated method stub
+		Log.v(tag, "Service B disconnected");
+	}
+
+	@Override
+	public void onServiceConnected(ComponentName name, IBinder service) {
+		// TODO Auto-generated method stub
+		Log.v(tag, "Service B connected");
+		MyBinderB binder = (MyBinderB) service;
+		ServiceB SB = binder.getService();
+		SB.showLog();
+	}
+};
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.activity_main);
+
+	findViewById(R.id.button1).setOnClickListener(new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent a = new Intent(MainActivity.this, ServiceB.class);
+			bindService(a, connB, BIND_AUTO_CREATE);
+	}
+}
+
+
+//ServiceB
+public class ServiceB extends Service {
+	public void showLog() {
+		Log.i(tag, "serviceB-->showLog()");
+	}
+
+	public class MyBinderB extends Binder {
+
+		public ServiceB getService() {
+			return ServiceB.this;
+		}
+	}
+
+	private MyBinderB myBinderB = new MyBinderB();
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return myBinderB;
+	}
+}
+```
+
+
+服务的生命周期
+
+![生命周期图][life_cycle]
+* 启动的服务：
+	startService()->onCreate()->onStartCommand()->running->stopService()/stopSelf()->onDestroy()->stopped
+    其中，服务未运行时会调用一次onCreate()，运行时不调用。
+* 绑定的服务：
+	bindService()->onCreate()->onBind()->running->onUnbind()->onDestroy()->stopped
+
+服务的开关过程，只有onStartCommand可多次调用，其他在一个生命周期只调用一次。
+
+这两个过程并不完全独立，也可以绑定一个由startService启动过的服务
+
+
+
+[life_cycle]:http://images.cnblogs.com/cnblogs_com/rossoneri/682731/o_service_lifecycle.png
