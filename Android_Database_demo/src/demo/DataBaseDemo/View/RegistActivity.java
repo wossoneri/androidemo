@@ -3,7 +3,10 @@ package demo.DataBaseDemo.View;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
@@ -161,6 +164,27 @@ public class RegistActivity extends Activity implements OnClickListener, CloseDl
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		case head_portrait_menu_view.START_CAMERA:
+
+			break;
+
+		case head_portrait_menu_view.START_GALLERY:
+			if(resultCode == RESULT_OK && null != data) {
+				Uri selectedImage = data.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+				Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+				cursor.moveToFirst();
+
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				String picPath = cursor.getString(columnIndex);
+				cursor.close();
+				
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
