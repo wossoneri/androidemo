@@ -85,7 +85,7 @@ Bound 绑定的
     如果名称设置为冒号`：`开头，一个对应用程序私有的新进程会在需要时和运行到这个进程时建立。如果名称为小写字母开头，服务会在一个相同名字的全局进程运行，如果有权限这样的话。这允许不同应用程序的组件可以分享一个进程，减少了资源的使用。
 
 ####创建“启动的”服务
-&emsp;&emsp;启动的(started)服务由startService(Intent)方法启动，在服务中的onStartCommand()方法里获得Intent信息。关闭则由服务自己的方法stopSelf()或者由启动服务的地方调用stopService(Intent)方法来关闭。并不会因为启动服务的应用程序销毁而关闭。
+&emsp;&emsp;启动的(started)服务由<i>startService(Intent)</i>方法启动，在服务中的<i>onStartCommand()</i>方法里获得`Intent`信息。关闭则由服务自己的方法<i>stopSelf()</i>或者由启动服务的地方调用<i>stopService(Intent)</i>方法来关闭。并不会因为启动服务的应用程序销毁而关闭。
 
 &emsp;&emsp;示例，一个应用需要保存数据到远程数据库，这时启动一个服务，通过创建启动的服务给服务传递数据，由服务执行保存行为，行为结束再自我销毁。因为服务跟启动它的应用在一个进程的主线程中，所以对于耗时的操作要起一个新的线程去做。
 ```java
@@ -116,16 +116,16 @@ public int onStartCommand(Intent intent, int flags, int startId) {
 写服务有2种，继承`service`或者`IntentService`。后者是前者的子类。前者包含上面介绍的各种方法，用于普通的服务。后者可以自己开一个工作线程一个接一个处理多个请求。
 
 #####继承IntentService
-大多数服务不需要同时处理多个请求，继承IntentService是最好的选择
+大多数服务不需要同时处理多个请求，继承`IntentService`是最好的选择
 
 IntentService处理流程
-* 创建默认的一个`worker`线程处理传递给 onStartCommand() 的所有`intent`，不占据应用的主线程
-* 创建一个工作队列一次传递一个`intent`到你实现的 onHandleIntent() 方法，避免了多线程
-* 在所以启动请求被处理后自动关闭服务，不需要调用 stopSelf()
-* 默认提供 onBind() 的实现，并返回`null`
-* 默认提供 onStartCommand() 的实现，实现发送`intent`到工作队列再到你的 onHandleIntent() 方法实现。
+* 创建默认的一个`worker`线程处理传递给<i>onStartCommand()</i>的所有`intent`，不占据应用的主线程
+* 创建一个工作队列一次传递一个`intent`到你实现的<i>onHandleIntent()</i>方法，避免了多线程
+* 在所以启动请求被处理后自动关闭服务，不需要调用<i>stopSelf()</i>
+* 默认提供<i>onBind()</i>的实现，并返回`null`
+* 默认提供<i>onStartCommand()</i>的实现，实现发送`intent`到工作队列再到你的<i>onHandleIntent()</i>方法实现。
 
-这些都加入到IntentService中了，你需要做的就是实现构造方法和onHandleIntent()，如下：
+这些都加入到`IntentService`中了，你需要做的就是实现构造方法和<i>onHandleIntent()</i>，如下：
 ```java
 public class HelloIntentService extends IntentService {
 
@@ -158,7 +158,7 @@ public class HelloIntentService extends IntentService {
   }
 }
 ```
-如果需要重写其他回调方法，如 onCreate,onStartCommand等，一定要调用super方法，保证IntentService正确处理worker线程，只有onHandleIntent和onBind不需要这样。如：
+如果需要重写其他回调方法，如<i>onCreate()</i>,<i>onStartCommand()</i>等，一定要调用<i>super()</i>方法，保证`IntentService`正确处理`worker`线程，只有<i>onHandleIntent()</i>和<i>onBind()</i>不需要这样。如：
 ```java
 @Override
 public int onStartCommand(Intent intent, int flags, int startId) {
@@ -167,16 +167,16 @@ public int onStartCommand(Intent intent, int flags, int startId) {
 }
 ```
 #####继承Service
-继承Service就可以实现对请求多线程的处理，前面介绍了service的生命周期，可以按照生命周期实现方法。就不放示例了。
+继承`Service`就可以实现对请求多线程的处理，前面介绍了`service`的生命周期，可以按照生命周期实现方法。就不放示例了。
 
-onStartCommand()的返回值
+<b><i>onStartCommand()</i>的返回值</b>
 返回一个整型值，用来描述系统在杀掉服务后是否要继续启动服务，返回值有三种：
 * <font color="#0099cc">START_NOT_STICKY</font>
-	系统不重新创建服务，除非有将要传递来的intent。这是最安全的选项，可以避免在不必要的时候运行服务。
+	系统不重新创建服务，除非有将要传递来的`intent`。这是最安全的选项，可以避免在不必要的时候运行服务。
 * <font color="#0099cc">START_STICKY</font>
-	系统重新创建服务并且调用onStartCommand()方法，但并不会传递最后一次传递的intent，只是传递一个空的intent。除非存在将要传递来的intent，那么就会传递这些intent。这个适合播放器一类的服务，不需要执行命令，只需要独自运行，等待任务。
+	系统重新创建服务并且调用<i>onStartCommand()</i>方法，但并不会传递最后一次传递的`intent`，只是传递一个空的`intent`。除非存在将要传递来的`intent`，那么就会传递这些`intent`。这个适合播放器一类的服务，不需要执行命令，只需要独自运行，等待任务。
 * <font color="#0099cc">START_REDELIVER_INTENT</font>
-	系统重新创建服务并且调用onStartCommand()方法，传递最后一次传递的intent。其余存在的需要传递的intent会按顺序传递进来。这适合像下载一样的服务，立即恢复，积极执行。
+	系统重新创建服务并且调用<i>onStartCommand()</i>方法，传递最后一次传递的`intent`。其余存在的需要传递的intent会按顺序传递进来。这适合像下载一样的服务，立即恢复，积极执行。
 
 如果想从服务获得结果，可以用广播来处理
 
@@ -184,11 +184,11 @@ onStartCommand()的返回值
 
 ####创建“绑定的”服务
 
-* 用bindService()方法将应用组件绑定到服务，建立一个长时间保持的联系。
-* 如果需要在activity或其他组件和服务交互或者通过进程间通信给其他应用程序提供本应用的功能，就需要绑定的服务。
-* 建立一个绑定的服务需要实现onBind()方法返回一个定义了与服务通信接口的IBinder对象。其他应用程序组件可以调用bindService()方法获取接口并且调用服务上的方法。
-* 创建一个绑定的服务，第一件事就是定义一个说明客户端与服务通信方式的接口。这个接口必须是IBinder的实现，并且必须要从onBind()方法返回。一旦客户端接收到了IBinder，就可以通过这个接口进行交互。
-* 多个客户端可以绑定到一个服务，可以用unbindService()方法解除绑定，当没有组件绑定在服务上，这个服务就会被销毁。
+* 用<i>bindService()</i>方法将应用组件绑定到服务，建立一个长时间保持的联系。
+* 如果需要在`activity`或其他组件和服务交互或者通过进程间通信给其他应用程序提供本应用的功能，就需要绑定的服务。
+* 建立一个绑定的服务需要实现<i>onBind()</i>方法返回一个定义了与服务通信接口的`IBinder`对象。其他应用程序组件可以调用<i>bindService()</i>方法获取接口并且调用服务上的方法。
+* 创建一个绑定的服务，第一件事就是定义一个说明客户端与服务通信方式的接口。这个接口必须是`IBinder`的实现，并且必须要从<i>onBind()</i>方法返回。一旦客户端接收到了`IBinder`，就可以通过这个接口进行交互。
+* 多个客户端可以绑定到一个服务，可以用<i>unbindService()</i>方法解除绑定，当没有组件绑定在服务上，这个服务就会被销毁。
 
 ```java
 //activity中
@@ -246,9 +246,27 @@ public class ServiceB extends Service {
 	}
 }
 ```
+#####启动前台服务
+&emsp;&emsp;前台服务是被认为是用户已知的正在运行的服务，当系统需要释放内存时不会优先杀掉该进程。前台进程必须发一个`notification`在状态栏中显示，直到进程被杀死。因为前台服务会一直消耗一部分资源，但不像一般服务那样会在需要的时候被杀掉，所以为了能节约资源，保护电池寿命，一定要在建前台服务的时候发`notification`，提示用户。当然，系统提供的方法就是必须有`notification`参数的，所以不要想着怎么把`notification`隐藏掉。
+```java
+@Override
+public int onStartCommand(Intent intent, int flags, int startId) {
+	// TODO Auto-generated method stub
+	Intent notificationIntent = new Intent(this, MainActivity.class);
+	PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+	Notification noti = new Notification.Builder(this)
+				.setContentTitle("Title")
+				.setContentText("Message")
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentIntent(pendingIntent)
+				.build();
+	startForeground(12346, noti);
+	return Service.START_STICKY;
+}
+```
+<i>startForeground()</i>方法就是将服务设为前台服务。参数12346就是这个通知唯一的id，只要不为0即可。
 
-
-服务的生命周期
+#####服务的生命周期
 
 ![生命周期图][life_cycle]
 * 启动的服务：
@@ -257,9 +275,62 @@ public class ServiceB extends Service {
 * 绑定的服务：
 	bindService()->onCreate()->onBind()->running->onUnbind()->onDestroy()->stopped
 
-服务的开关过程，只有onStartCommand可多次调用，其他在一个生命周期只调用一次。
+服务起始于<i>onCreate()</i>，终止于<i>onDestory()</i>
+服务的开关过程，只有<i>onStartCommand()</i>可多次调用，其他在一个生命周期只调用一次。
 
-这两个过程并不完全独立，也可以绑定一个由startService启动过的服务
+这两个过程并不完全独立，也可以绑定一个由<i>startService()</i>启动过的服务
+
+####关于怎样让服务不被杀死
+&emsp;&emsp;这个倒是有点流氓软件的意思，但有些特定情况还是需要服务能保持开启不被杀死，当然这样做我还是在程序里添加了关闭服务的按钮，也就是开启了就杀不死，除非在软件里关闭。
+
+服务不被杀死分3种来讨论
+1.系统根据资源分配情况杀死服务
+2.用户通过`settings`->`Apps`->`Running`->`Stop`方式杀死服务
+3.用户通过`settings`->`Apps`->`Downloaded`->`Force Stop`方式杀死服务
+
+<b>第一种情况：</b>
+&emsp;&emsp;用户不干预，完全靠系统来控制，办法有很多。比如<i>onStartCommand()</i>方法的返回值设为`START_STICKY`，服务就会在资源紧张的时候被杀掉，然后在资源足够的时候再恢复。当然也可设置为前台服务，使其有高的优先级，在资源紧张的时候也不会被杀掉。
+
+<b>第二种情况：</b>
+&emsp;&emsp;用户干预，主动杀掉运行中的服务。这个过程杀死服务会通过服务的生命周期，也就是会调用<i>onDestory()</i>方法，这时候一个方案就是在<i>onDestory()</i>中发送广播开启自己。这样杀死服务后会立即启动。如下：
+```java
+@Override
+public void onCreate() {
+	// TODO Auto-generated method stub
+	super.onCreate();
+
+	mBR = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Intent a = new Intent(ServiceA.this, ServiceA.class);
+			startService(a);
+		}
+	};
+	mIF = new IntentFilter();
+	mIF.addAction("listener");
+	registerReceiver(mBR, mIF);
+}
+
+@Override
+public void onDestroy() {
+	// TODO Auto-generated method stub
+	super.onDestroy();
+
+	Intent intent = new Intent();
+	intent.setAction("listener");
+	sendBroadcast(intent);
+
+	unregisterReceiver(mBR);
+}
+```
+&emsp;&emsp;当然，从理论上来讲这个方案是可行的，实验一下也可以。但有些情况下，发送的广播在消息队列中排的靠后，就有可能服务还没接收到广播就销毁了(这是我对实验结果的猜想，具体执行步骤暂时还不了解)。所以为了能让这个机制完美运行，可以开启两个服务，相互监听，相互启动。服务A监听B的广播来启动B，服务B监听A的广播来启动A。经过实验，这个方案可行，并且用360杀掉后几秒后服务也还是能自启的。到这里再说一句，如果不是某些功能需要的服务，不建议这么做，会降低用户体验。
+
+<b>第三种情况：</b>
+&emsp;&emsp;强制关闭就没有办法。这个好像是从包的level去关的，并不走完整的生命周期。所以在服务里加代码是无法被调用的。处理这个情况的唯一方法是屏蔽掉`force stop`和`uninstall`按钮，让其不可用。方法自己去找吧。当然有些手机自带的清理功能就是从这个地方清理的，比如华为的清理。所以第三种情况我也没有什么更好的办法了。
+
+&emsp;&emsp;最后再说一句，别在这上面太折腾，弄成流氓软件就不好了。我就是讨厌一些软件乱发通知，起服务才转而用iPhone的。不过下一代Android好像可以支持用户选择是否开启软件设置的权限了，倒是可以期待一下。
+推荐一篇文章：[Diamonds Are Forever. Services Are Not.](http://www.androidguys.com/2009/09/09/diamonds-are-forever-services-are-not/ "Diamonds Are Forever. Services Are Not.")
 
 
 

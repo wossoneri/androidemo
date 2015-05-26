@@ -1,18 +1,21 @@
 package com.phicomm.hu;
 
+import java.util.List;
+
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -33,6 +36,8 @@ public class FxService extends Service {
 	WindowManager mWindowManager;
 
 	Button mFloatView;
+	ActivityManager mActivityManager;
+	List<ActivityManager.RecentTaskInfo> mAppList = new;
 
 	private static final String TAG = "FxService";
 
@@ -41,6 +46,7 @@ public class FxService extends Service {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		Log.i(TAG, "oncreat");
+		mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
 		createFloatView();
 		// Toast.makeText(FxService.this, "create FxService",
 		// Toast.LENGTH_LONG);
@@ -85,8 +91,7 @@ public class FxService extends Service {
 
 		LayoutInflater inflater = LayoutInflater.from(getApplication());
 		// 获取浮动窗口视图所在布局
-		mFloatLayout = (LinearLayout) inflater.inflate(R.layout.float_layout,
-				null);
+		mFloatLayout = (LinearLayout) inflater.inflate(R.layout.float_layout, null);
 		// 添加mFloatLayout
 		mWindowManager.addView(mFloatLayout, wmParams);
 
@@ -98,9 +103,8 @@ public class FxService extends Service {
 		// 浮动窗口按钮
 		mFloatView = (Button) mFloatLayout.findViewById(R.id.float_id);
 
-		mFloatLayout.measure(View.MeasureSpec.makeMeasureSpec(0,
-				View.MeasureSpec.UNSPECIFIED), View.MeasureSpec
-				.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+		mFloatLayout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+				View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 		Log.i(TAG, "Width/2--->" + mFloatView.getMeasuredWidth() / 2);
 		Log.i(TAG, "Height/2--->" + mFloatView.getMeasuredHeight() / 2);
 		// 设置监听浮动窗口的触摸移动
@@ -110,14 +114,12 @@ public class FxService extends Service {
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				// getRawX是触摸位置相对于屏幕的坐标，getX是相对于按钮的坐标
-				wmParams.x = (int) event.getRawX()
-						- mFloatView.getMeasuredWidth() / 2;
+				wmParams.x = (int) event.getRawX() - mFloatView.getMeasuredWidth() / 2;
 				// Log.i(TAG, "Width/2--->" + mFloatView.getMeasuredWidth()/2);
 				Log.i(TAG, "RawX" + event.getRawX());
 				Log.i(TAG, "X" + event.getX());
 				// 25为状态栏的高度
-				wmParams.y = (int) event.getRawY()
-						- mFloatView.getMeasuredHeight() / 2 - 25;
+				wmParams.y = (int) event.getRawY() - mFloatView.getMeasuredHeight() / 2 - 25;
 				// Log.i(TAG, "Width/2--->" + mFloatView.getMeasuredHeight()/2);
 				Log.i(TAG, "RawY" + event.getRawY());
 				Log.i(TAG, "Y" + event.getY());
@@ -132,8 +134,8 @@ public class FxService extends Service {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(FxService.this, "onClick", Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(FxService.this, "onClick", Toast.LENGTH_SHORT).show();
+				mActivityManager.getRecentTasks(3, ActivityManager.RECENT_IGNORE_UNAVAILABLE);
 			}
 		});
 	}

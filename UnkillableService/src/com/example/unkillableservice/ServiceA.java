@@ -1,5 +1,7 @@
 package com.example.unkillableservice;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -72,6 +74,17 @@ public class ServiceA extends Service {
 		// lastY = intent.getFloatExtra("Ypos", 0);
 		Log.v(TAG, "Service A start command");
 		createFloatView();
+		
+		Intent notificationIntent = new Intent(this, MainActivity.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		Notification noti = new Notification.Builder(this)
+				.setContentTitle("Title")
+				.setContentText("Message")
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentIntent(pendingIntent)
+				.build();
+		startForeground(12346, noti);
+		
 		return Service.START_STICKY;
 	}
 
