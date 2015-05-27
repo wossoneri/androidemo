@@ -1,5 +1,6 @@
 package com.phicomm.hu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ActivityManager;
@@ -37,7 +38,7 @@ public class FxService extends Service {
 
 	Button mFloatView;
 	ActivityManager mActivityManager;
-	List<ActivityManager.RecentTaskInfo> mAppList = new;
+	List<ActivityManager.RecentTaskInfo> mAppList = new ArrayList<ActivityManager.RecentTaskInfo>();
 
 	private static final String TAG = "FxService";
 
@@ -134,8 +135,15 @@ public class FxService extends Service {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(FxService.this, "onClick", Toast.LENGTH_SHORT).show();
-				mActivityManager.getRecentTasks(3, ActivityManager.RECENT_IGNORE_UNAVAILABLE);
+
+				mAppList = mActivityManager.getRecentTasks(3,
+						ActivityManager.RECENT_IGNORE_UNAVAILABLE);// 最近使用过的app在list最前面
+
+				ActivityManager.RecentTaskInfo info = mAppList.get(1);
+				if (null == info)
+					Toast.makeText(FxService.this, "No other apps", Toast.LENGTH_SHORT).show();
+				else
+					startActivity(info.baseIntent);
 			}
 		});
 	}
