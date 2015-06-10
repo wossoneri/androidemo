@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/main_lineer">
+    <ScrollView
+            android:id="@+id/containerBody"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:measureAllChildren="true">
+    </ScrollView>
+    <LinearLayout
+            android:id="@+id/tab"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="@drawable/tab_background">
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+               >
+            <RadioGroup android:gravity="center_vertical"
+                        android:orientation="horizontal" android:id="@+id/main_radio"
+                        android:layout_width="fill_parent" android:layout_height="50dip"
+                        android:layout_gravity="bottom" >
+                <RadioButton android:id="@+id/radio_button0"
+                             android:layout_marginTop="1.0dip" android:text=""
+                             android:drawableTop="@null" style="@style/main_tab_bottom"
+                             android:background="@drawable/tab_icon_gift_layout"/>
+                
+                <RadioButton android:id="@+id/radio_button1"
+                             android:layout_marginTop="1.0dip" android:text=""
+                             android:drawableTop="@null" style="@style/main_tab_bottom"
+                             android:background="@drawable/tab_icon_mail_layout" />
+                
+                <RadioButton android:id="@+id/radio_button2"
+                             android:layout_marginTop="1.0dip" android:text=""
+                             android:drawableTop="@null" style="@style/main_tab_bottom"
+                             android:background="@drawable/tab_icon_msg_layout" />
+                
+                <RadioButton android:id="@+id/radio_button3"
+                             android:layout_marginTop="1.0dip" android:text=""
+                             android:drawableTop="@null" style="@style/main_tab_bottom"
+                             android:background="@drawable/tab_icon_search_layout" />
+                
+                <RadioButton android:id="@+id/radio_button4"
+                             android:layout_marginTop="1.0dip" android:text=""
+                             android:drawableTop="@null" style="@style/main_tab_bottom"
+                             android:background="@drawable/tab_icon_set_layout" />
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

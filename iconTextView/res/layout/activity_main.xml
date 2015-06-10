@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:example="http://com.android.example"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.android.example.widget.IconTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="The First Smile Face"
+        example:iconSrc="@drawable/small" />
+
+    <com.android.example.widget.IconTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="The Second Smile Face"
+        android:textSize="24dp"
+        example:iconSrc="@drawable/small" />
+
+    <com.android.example.widget.IconTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="The Third Smile Face"
+        android:textSize="36dp"
+        example:iconSrc="@drawable/small" />
+
+    <com.android.example.widget.IconTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="The Fourth Smile Face"
+        android:textSize="48dp"
+        example:iconSrc="@drawable/small" />
+
+    <com.android.example.widget.IconTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="The Fifth Smile Face"
+        android:textSize="36dp"
+        example:iconSrc="@drawable/small" />
+
+    <com.android.example.widget.IconTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="The Sixth Smile Face"
+        android:textSize="24dp"
+        example:iconSrc="@drawable/small" />
+
+    <com.android.example.widget.IconTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="The Seventh Smile Face"
+        example:iconSrc="@drawable/small" />
+
+</LinearLayout>
